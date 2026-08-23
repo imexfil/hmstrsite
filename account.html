@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — Hamster CRMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <div class="page-glow page-glow-left"></div>
+  <div class="page-glow page-glow-right"></div>
+
+  <div class="subpage-nav-wrap">
+    <div class="container">
+      <nav class="nav site-nav">
+        <a class="brand" href="index.html" aria-label="Hamster CRMP">
+          <span class="brand-mark">H</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Главная</a>
+          <a href="https://forum.h-bonus.ru" target="_blank" rel="noreferrer">Форум</a>
+          <a href="news.html">Новости</a>
+          <a href="donate.html">Донат</a>
+        </div>
+        <div class="nav-actions">
+          <a class="button button-dark nav-active-btn" href="account.html">Кабинет →</a>
+          <a class="button button-primary" href="index.html#start">Начать игру</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="subpage-main">
+    <section class="section subpage-hero-section account-enter-section">
+      <div class="container">
+        <div class="subpage-hero-title">
+          <h1>ЛИЧНЫЙ<br><span class="text-green">КАБИНЕТ</span></h1>
+          <p>Войди по игровому нику и паролю, после этого откроется отдельная страница профиля.</p>
+        </div>
+
+        <form class="account-login account-login-center" id="accountLoginForm">
+          <div>
+            <span class="tag">Вход</span>
+            <h2>Данные аккаунта</h2>
+            <p>Используй никнейм и пароль от игрового аккаунта.</p>
+          </div>
+
+          <label class="account-field">
+            <span>Никнейм</span>
+            <input id="accountNickname" type="text" name="nickname" placeholder="Например: Ramil_Gorilla" autocomplete="username" required>
+          </label>
+
+          <label class="account-field">
+            <span>Пароль</span>
+            <input id="accountPassword" type="password" name="password" placeholder="Пароль от аккаунта" autocomplete="current-password" required>
+          </label>
+
+          <button class="button button-primary" id="accountSubmit" type="submit">Войти в кабинет</button>
+          <p class="account-message" id="accountMessage" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>HAMSTER CRMP</strong>
+      </div>
+    </div>
+    <div class="container footer-dev">
+      Разработано <a href="https://exfil-dev.ru" target="_blank" rel="noreferrer">exfil-dev.ru</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/account.js"></script>
+</body>
+</html>

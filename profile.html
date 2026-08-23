@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль — Hamster CRMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="cabinet-page">
+  <div class="page-glow page-glow-left"></div>
+  <div class="page-glow page-glow-right"></div>
+
+  <div class="subpage-nav-wrap">
+    <div class="container">
+      <nav class="nav site-nav">
+        <a class="brand" href="index.html" aria-label="Hamster CRMP">
+          <span class="brand-mark">H</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Главная</a>
+          <a href="https://forum.h-bonus.ru" target="_blank" rel="noreferrer">Форум</a>
+          <a href="news.html">Новости</a>
+          <a href="donate.html">Донат</a>
+        </div>
+        <div class="nav-actions">
+          <button class="button button-dark cabinet-logout-nav" id="profileLogout" type="button">Выйти</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="prof-shell">
+
+    <!-- Hero banner -->
+    <div class="prof-hero">
+      <div class="prof-hero-inner">
+        <div class="prof-avatar" aria-label="Аватар персонажа">
+          <svg viewBox="0 0 96 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="48" cy="32" r="18"></circle>
+            <path d="M16 86c4-20 15-32 32-32s28 12 32 32"></path>
+          </svg>
+          <span id="profileSkin">skin 0</span>
+        </div>
+        <div class="prof-hero-info">
+          <h1 id="profileName">Игрок</h1>
+          <div class="prof-badges">
+            <span class="prof-badge prof-badge-lvl" id="profileLevel">0 lvl</span>
+            <span class="prof-badge" id="profileRub">0 rub</span>
+            <span class="prof-badge prof-badge-vip hidden" id="characterVipBadge">VIP</span>
+          </div>
+          <div class="prof-health-row">
+            <div class="prof-health-track">
+              <i id="profileHealthBar" style="width:0%"></i>
+            </div>
+            <span id="profileHealthText">0 / 100</span>
+          </div>
+        </div>
+        <dl class="prof-hero-stats">
+          <div><dt>Работа</dt><dd id="characterJob">—</dd></div>
+          <div><dt>Семья</dt><dd id="characterFamily">—</dd></div>
+          <div><dt>Наличные</dt><dd id="profileMoney">0 ₽</dd></div>
+          <div><dt>Банк</dt><dd id="profileBank">0 ₽</dd></div>
+        </dl>
+      </div>
+      <div class="prof-hero-statbar">
+        <div class="prof-statbar-item">
+          <span>Уровень</span>
+          <strong id="characterLevel">0</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Игровые часы</span>
+          <strong id="characterHours">0 ч.</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Розыск</span>
+          <strong id="characterSuspect">0</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Предупреждения</span>
+          <strong id="characterWarn">0</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Военный билет</span>
+          <strong id="characterVoennik">—</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Последний вход</span>
+          <strong id="securityLastLogin">—</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content grid -->
+    <div class="prof-grid">
+
+      <!-- Левая колонка: только детали -->
+      <div class="prof-col-left">
+        <article class="prof-card">
+          <h3 class="prof-card-title">Персонаж</h3>
+          <dl class="prof-list">
+            <div><dt>Работа</dt><dd id="characterJobCard">—</dd></div>
+            <div><dt>Телефон</dt><dd id="characterPhone">—</dd></div>
+            <div><dt>Email</dt><dd id="securityEmail">—</dd></div>
+            <div><dt>Наличные</dt><dd id="profileMoneyCard">—</dd></div>
+            <div><dt>Банк</dt><dd id="profileBankCard">—</dd></div>
+            <div><dt>VIP статус</dt><dd id="characterVip">—</dd></div>
+            <div><dt>Семья</dt><dd id="characterFamilyCard">—</dd></div>
+            <div><dt>Ранг семьи</dt><dd id="characterFamilyRank">—</dd></div>
+          </dl>
+        </article>
+      </div>
+
+      <!-- Средняя колонка: навыки -->
+      <div class="prof-col-mid">
+        <article class="prof-card prof-card-fill">
+          <h3 class="prof-card-title">Навыки</h3>
+          <div class="prof-skills" id="profileSkills"></div>
+        </article>
+      </div>
+
+      <!-- Правая колонка: транспорт -->
+      <div class="prof-col-right">
+        <article class="prof-card prof-card-fill">
+          <h3 class="prof-card-title">Транспорт</h3>
+          <div class="prof-cars" id="profileCars">
+            <div class="prof-empty">Транспорт не найден.</div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>HAMSTER CRMP</strong>
+      </div>
+    </div>
+    <div class="container footer-dev">
+      Разработано <a href="https://exfil-dev.ru" target="_blank" rel="noreferrer">exfil-dev.ru</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/profile.js"></script>
+</body>
+</html>

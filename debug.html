@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Hamster CRMP</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #00ff00;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .section h2 {
+            color: #00ffff;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin: 5px;
+            border-radius: 3px;
+        }
+        button:hover {
+            background: #00cc00;
+        }
+        .result {
+            background: #000;
+            padding: 10px;
+            margin-top: 10px;
+            border-left: 3px solid #00ff00;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error { color: #ff0000; border-left-color: #ff0000; }
+        .success { color: #00ff00; }
+        .info { color: #00aaff; }
+        .warning { color: #ffaa00; }
+        input {
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            width: 300px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Hamster CRMP Debug Console</h1>
+
+    <div class="section">
+        <h2>1️⃣ PHP Test</h2>
+        <button onclick="testPHP()">Test PHP & Database</button>
+        <div id="phpResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>2️⃣ Login Test</h2>
+        <div>
+            <input type="text" id="testNick" placeholder="Nickname" value="Forza_Bedolaga">
+            <input type="password" id="testPass" placeholder="Password" value="">
+        </div>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>3️⃣ API Endpoints Test</h2>
+        <button onclick="testStats()">Stats API</button>
+        <button onclick="testCars()">Cars API</button>
+        <button onclick="testFamily()">Family API</button>
+        <div id="apiResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>4️⃣ LocalStorage Check</h2>
+        <button onclick="checkStorage()">Check Storage</button>
+        <button onclick="clearStorage()">Clear Storage</button>
+        <div id="storageResult"></div>
+    </div>
+
+    <script>
+        async function testPHP() {
+            const result = document.getElementById('phpResult');
+            result.innerHTML = '<div class="info">Testing PHP...</div>';
+            
+            try {
+                const response = await fetch('api/test.php');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    result.innerHTML = `<div class="result success">${JSON.stringify(data, null, 2)}</div>`;
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Not valid JSON:\n${text}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testLogin() {
+            const result = document.getElementById('loginResult');
+            const nick = document.getElementById('testNick').value;
+            const pass = document.getElementById('testPass').value;
+            
+            result.innerHTML = '<div class="info">Testing login...</div>';
+            
+            try {
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nickname: nick,
+                        password: pass
+                    })
+                });
+                
+                const text = await response.text();
+                console.log('Response text:', text);
+                
+                try {
+                    const data = JSON.parse(text);
+                    if (response.ok) {
+                        result.innerHTML = `<div class="result success">✅ Login successful!\n${JSON.stringify(data, null, 2)}</div>`;
+                    } else {
+                        result.innerHTML = `<div class="result error">❌ Login failed (${response.status}):\n${JSON.stringify(data, null, 2)}</div>`;
+                    }
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Not valid JSON (Status: ${response.status}):\n${text}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testStats() {
+            const result = document.getElementById('apiResult');
+            result.innerHTML = '<div class="info">Testing stats API...</div>';
+            
+            try {
+                const response = await fetch('api/stats.php?id=5');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    result.innerHTML = `<div class="result success">✅ Stats API:\n${JSON.stringify(data, null, 2)}</div>`;
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Not valid JSON:\n${text}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testCars() {
+            const result = document.getElementById('apiResult');
+            result.innerHTML = '<div class="info">Testing cars API...</div>';
+            
+            try {
+                const response = await fetch('api/cars.php?id=5');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    result.innerHTML = `<div class="result success">✅ Cars API:\n${JSON.stringify(data, null, 2)}</div>`;
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Not valid JSON:\n${text}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testFamily() {
+            const result = document.getElementById('apiResult');
+            result.innerHTML = '<div class="info">Testing family API...</div>';
+            
+            try {
+                const response = await fetch('api/family.php?id=5');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    result.innerHTML = `<div class="result success">✅ Family API:\n${JSON.stringify(data, null, 2)}</div>`;
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Not valid JSON:\n${text}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function checkStorage() {
+            const result = document.getElementById('storageResult');
+            const account = localStorage.getItem('hamsterAccount');
+            
+            if (account) {
+                try {
+                    const data = JSON.parse(account);
+                    result.innerHTML = `<div class="result info">✅ Found account data:\n${JSON.stringify(data, null, 2)}</div>`;
+                } catch (e) {
+                    result.innerHTML = `<div class="result error">❌ Invalid data in storage:\n${account}</div>`;
+                }
+            } else {
+                result.innerHTML = `<div class="result warning">⚠️ No account data in localStorage</div>`;
+            }
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('hamsterAccount');
+            document.getElementById('storageResult').innerHTML = `<div class="result success">✅ Storage cleared! Now you can login again.</div>`;
+        }
+
+        // Auto-test PHP on load
+        window.addEventListener('load', () => {
+            testPHP();
+            checkStorage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+# Главный .htaccess для сайта
+
+# Включаем mod_rewrite (если доступен)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# Настройки PHP (если доступны)
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log error.log
+</IfModule>
+
+# Защита от просмотра директорий
+Options -Indexes
+
+# Кодировка по умолчанию
+AddDefaultCharset UTF-8
+
+# CORS headers для API
+<IfModule mod_headers.c>
+    SetEnvIf Origin "^http(s)?://(.+\.)?(localhost|127\.0\.0\.1)(:[0-9]+)?$" CORS_ALLOW_ORIGIN=$0
+    Header set Access-Control-Allow-Origin "%{CORS_ALLOW_ORIGIN}e" env=CORS_ALLOW_ORIGIN
+    Header set Access-Control-Allow-Credentials "true" env=CORS_ALLOW_ORIGIN
+</IfModule>
+
+# Типы файлов
+<IfModule mod_mime.c>
+    AddType application/json .json
+    AddType text/css .css
+    AddType application/javascript .js
+</IfModule>
+
+# Кеширование статических файлов
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/json "access plus 1 day"
+</IfModule>
+
+# Сжатие файлов
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json
+</IfModule>

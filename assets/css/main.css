@@ -3432,6 +3432,9 @@ img {
   .prof-grid {
     grid-template-columns: 240px 1fr 1fr;
   }
+  .prof-grid-property {
+    grid-template-columns: 1fr 1fr;
+  }
   .prof-hero-inner {
     grid-template-columns: 88px 1fr auto;
   }
@@ -3440,6 +3443,9 @@ img {
 @media (max-width: 860px) {
   .prof-grid {
     grid-template-columns: 1fr 1fr;
+  }
+  .prof-grid-property {
+    grid-template-columns: 1fr;
   }
   .prof-col-left {
     grid-column: 1 / -1;
@@ -3482,8 +3488,8 @@ img {
 /* Statbar inside hero */
 .prof-hero-statbar {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 1px;
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -3492,6 +3498,27 @@ img {
 .prof-statbar-item {
   padding: 0 20px 0 0;
   border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.prof-statbar-item:nth-child(4n) {
+  border-right: none;
+  padding-right: 0;
+}
+
+.prof-grid-property {
+  margin-top: 40px; /* Увеличено с 20px до 40px */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px; /* Добавлен отступ между колонками */
+}
+
+.prof-grid-property .prof-card {
+  min-height: 180px;
+}
+
+.prof-property {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .prof-statbar-item:last-child {
@@ -3517,10 +3544,11 @@ img {
 
 @media (max-width: 860px) {
   .prof-hero-statbar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
-  .prof-statbar-item {
+  .prof-statbar-item,
+  .prof-statbar-item:nth-child(4n) {
     border-right: none;
     padding-right: 0;
   }

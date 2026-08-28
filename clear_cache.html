@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очистка кеша</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .success {
+            color: #00ff00;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Очистка кеша</h1>
+        <div class="message">
+            Эта страница очистит старые данные<br>
+            личного кабинета из браузера.
+        </div>
+        <button onclick="clearAndRedirect()">Очистить и войти заново</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function clearAndRedirect() {
+            // Очищаем localStorage
+            localStorage.removeItem('hamsterAccount');
+            
+            // Показываем сообщение
+            document.getElementById('result').innerHTML = 
+                '<div class="success">✅ Кеш очищен!<br>Перенаправление...</div>';
+            
+            // Перенаправляем на страницу входа через 1 секунду
+            setTimeout(() => {
+                window.location.href = 'account.html';
+            }, 1000);
+        }
+
+        // Автоматическая очистка при загрузке страницы
+        window.addEventListener('load', () => {
+            setTimeout(clearAndRedirect, 500);
+        });
+    </script>
+</body>
+</html>

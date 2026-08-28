@@ -48,6 +48,7 @@
           <h1 id="profileName">Игрок</h1>
           <div class="prof-badges">
             <span class="prof-badge prof-badge-lvl" id="profileLevel">0 lvl</span>
+            <span class="prof-badge" id="profileExp">0 exp</span>
             <span class="prof-badge" id="profileRub">0 rub</span>
             <span class="prof-badge prof-badge-vip hidden" id="characterVipBadge">VIP</span>
           </div>
@@ -63,6 +64,7 @@
           <div><dt>Семья</dt><dd id="characterFamily">—</dd></div>
           <div><dt>Наличные</dt><dd id="profileMoney">0 ₽</dd></div>
           <div><dt>Банк</dt><dd id="profileBank">0 ₽</dd></div>
+          <div><dt>Опыт</dt><dd id="profileExpHero">0</dd></div>
         </dl>
       </div>
       <div class="prof-hero-statbar">
@@ -71,8 +73,24 @@
           <strong id="characterLevel">0</strong>
         </div>
         <div class="prof-statbar-item">
-          <span>Игровые часы</span>
-          <strong id="characterHours">0 ч.</strong>
+          <span>Боевой пропуск</span>
+          <strong id="characterBpLevel">0</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Отыграно за час</span>
+          <strong id="characterHourPlay">—</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>За день</span>
+          <strong id="characterDayPlay">—</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Отыграно вчера</span>
+          <strong id="characterPrevDayPlay">—</strong>
+        </div>
+        <div class="prof-statbar-item">
+          <span>Последний вход</span>
+          <strong id="securityLastLogin">—</strong>
         </div>
         <div class="prof-statbar-item">
           <span>Розыск</span>
@@ -81,14 +99,6 @@
         <div class="prof-statbar-item">
           <span>Предупреждения</span>
           <strong id="characterWarn">0</strong>
-        </div>
-        <div class="prof-statbar-item">
-          <span>Военный билет</span>
-          <strong id="characterVoennik">—</strong>
-        </div>
-        <div class="prof-statbar-item">
-          <span>Последний вход</span>
-          <strong id="securityLastLogin">—</strong>
         </div>
       </div>
     </div>
@@ -109,6 +119,12 @@
             <div><dt>VIP статус</dt><dd id="characterVip">—</dd></div>
             <div><dt>Семья</dt><dd id="characterFamilyCard">—</dd></div>
             <div><dt>Ранг семьи</dt><dd id="characterFamilyRank">—</dd></div>
+            <div><dt>Военный билет</dt><dd id="characterVoennik">—</dd></div>
+            <div><dt>Слоты авто</dt><dd id="characterCarSlots">—</dd></div>
+            <div><dt>Слоты бизнеса</dt><dd id="characterBizSlots">—</dd></div>
+            <div><dt>Слоты дома</dt><dd id="characterHomeSlots">—</dd></div>
+            <div><dt>Слоты гаража</dt><dd id="characterGarageSlots">—</dd></div>
+            <div><dt>Боевой пропуск</dt><dd id="characterBpLevelCard">—</dd></div>
           </dl>
         </article>
       </div>
@@ -131,6 +147,25 @@
         </article>
       </div>
 
+    </div>
+
+    <div class="prof-grid prof-grid-property">
+      <div>
+        <article class="prof-card">
+          <h3 class="prof-card-title">Бизнес</h3>
+          <div class="prof-property" id="profileBusinesses">
+            <div class="prof-empty">Бизнеса нет.</div>
+          </div>
+        </article>
+      </div>
+      <div>
+        <article class="prof-card">
+          <h3 class="prof-card-title">Дома</h3>
+          <div class="prof-property" id="profileHouses">
+            <div class="prof-empty">Дома нет.</div>
+          </div>
+        </article>
+      </div>
     </div>
   </main>
 

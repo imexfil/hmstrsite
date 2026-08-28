@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Connection</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        .test {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #333;
+            background: #0a0a0a;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .info { color: #00aaff; }
+        pre {
+            background: #000;
+            padding: 10px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #00cc00;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Hamster CRMP API Test</h1>
+    
+    <div class="test">
+        <h3>Test 1: Login API</h3>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="test">
+        <h3>Test 2: Stats API</h3>
+        <button onclick="testStats()">Test Stats (Account ID: 5)</button>
+        <div id="statsResult"></div>
+    </div>
+
+    <div class="test">
+        <h3>Test 3: Cars API</h3>
+        <button onclick="testCars()">Test Cars (Account ID: 5)</button>
+        <div id="carsResult"></div>
+    </div>
+
+    <div class="test">
+        <h3>Test 4: Family API</h3>
+        <button onclick="testFamily()">Test Family (Account ID: 5)</button>
+        <div id="familyResult"></div>
+    </div>
+
+    <script>
+        async function testLogin() {
+            const result = document.getElementById('loginResult');
+            result.innerHTML = '<p class="info">Testing...</p>';
+            
+            try {
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nickname: 'Forza_Bedolaga',
+                        password: 'test'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <p class="success">✅ Success! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Error! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Exception: ${error.message}</p>`;
+            }
+        }
+
+        async function testStats() {
+            const result = document.getElementById('statsResult');
+            result.innerHTML = '<p class="info">Testing...</p>';
+            
+            try {
+                const response = await fetch('api/stats.php?id=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <p class="success">✅ Success! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Error! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Exception: ${error.message}</p>`;
+            }
+        }
+
+        async function testCars() {
+            const result = document.getElementById('carsResult');
+            result.innerHTML = '<p class="info">Testing...</p>';
+            
+            try {
+                const response = await fetch('api/cars.php?id=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <p class="success">✅ Success! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Error! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Exception: ${error.message}</p>`;
+            }
+        }
+
+        async function testFamily() {
+            const result = document.getElementById('familyResult');
+            result.innerHTML = '<p class="info">Testing...</p>';
+            
+            try {
+                const response = await fetch('api/family.php?id=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <p class="success">✅ Success! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Error! Status: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Exception: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

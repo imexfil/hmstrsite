@@ -1,0 +1,16 @@
+# Защита config.php от прямого доступа
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Включаем обработку PHP
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# Разрешаем CORS для API
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type"

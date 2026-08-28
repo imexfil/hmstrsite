@@ -5,6 +5,15 @@ if (!accountRaw) {
 }
 
 const account = JSON.parse(accountRaw || '{}');
+
+// Проверяем версию данных, если структура устарела - очищаем и перелогиниваемся
+const DATA_VERSION = '2.0';
+if (!account._version || account._version !== DATA_VERSION) {
+  console.log('Outdated account data, need to re-login');
+  localStorage.removeItem('hamsterAccount');
+  window.location.href = 'account.html';
+}
+
 const logout = document.getElementById('profileLogout');
 let carsExpanded = false;
 let skillsExpanded = false;
@@ -16,6 +25,7 @@ renderProfile(account);
 loadVehicleNames();
 loadCars(account);
 loadFamily(account);
+loadStats(account);
 
 logout.addEventListener('click', () => {
   localStorage.removeItem('hamsterAccount');
@@ -30,6 +40,7 @@ function renderProfile(data) {
   setText('profileName', data.name || 'Игрок');
   setText('profileSkin', `skin ${data.skin || 0}`);
   setText('profileLevel', `${level} lvl`);
+  setText('profileExp', `${Number(data.exp || 0).toLocaleString('ru-RU')} exp`);
   setText('profileRub', `${rub.toLocaleString('ru-RU')} rub`);
   setText('profileMoney', formatMoney(data.money));
   setText('profileBank', formatMoney(data.bank));
@@ -37,7 +48,13 @@ function renderProfile(data) {
 
   setText('securityEmail', email);
   setText('securityLastLogin', formatDate(data.lastLogin));
-  setText('characterLevel', level);
+  setText('characterLevel', `${level} · ${Number(data.exp || 0).toLocaleString('ru-RU')} exp`);
+  setText('characterBpLevel', data.bpLevel || 0);
+  setText('characterBpLevelCard', data.bpLevel || 0);
+  setText('characterHourPlay', formatPlaytime(data.gameForHour));
+  setText('characterDayPlay', formatPlaytime(data.gameForDay));
+  setText('characterPrevDayPlay', formatPlaytime(data.gameForDayPrev));
+  setText('profileExpHero', Number(data.exp || 0).toLocaleString('ru-RU'));
   setText('characterJob', jobLabel(data.job));
   setText('characterJobCard', jobLabel(data.job));
   setText('characterPhone', normalizeText(data.phone, 'Нет'));
@@ -51,11 +68,16 @@ function renderProfile(data) {
   setText('characterFamilyRank', familyRankLabel(data));
   setText('characterWarn', data.warn || 0);
   setText('characterSuspect', data.suspect || 0);
-  setText('characterHours', `${data.gameForHour || 0} ч.`);
   setText('characterVoennik', Number(data.voennik) > 0 ? 'Есть' : 'Нет');
+  setText('characterCarSlots', data.carSlots !== undefined && data.carSlots !== null ? data.carSlots : '—');
+  setText('characterBizSlots', data.bizSlot !== undefined && data.bizSlot !== null ? data.bizSlot : '—');
+  setText('characterHomeSlots', data.homeSlot !== undefined && data.homeSlot !== null ? data.homeSlot : '—');
+  setText('characterGarageSlots', data.garageSlot !== undefined && data.garageSlot !== null ? data.garageSlot : '—');
 
   renderCars(data.cars || []);
   renderSkills(data.skills || {});
+  renderBusinesses(data.businesses || []);
+  renderHouses(data.houses || []);
 }
 
 function updateExpandState() {
@@ -74,14 +96,14 @@ function renderCars(cars) {
     return;
   }
 
-  const visibleCars = carsExpanded ? cars : cars.slice(0, 4);
+  const visibleCars = carsExpanded ? cars : cars.slice(0, 8); // Увеличено с 4 до 8
   list.innerHTML = visibleCars.map(renderCar).join('');
 
   const parent = list.parentElement;
   parent?.querySelectorAll('.prof-more').forEach((button) => button.remove());
 
-  if (cars.length > 4) {
-    const label = carsExpanded ? 'Свернуть' : `Показать больше (${cars.length - 4})`;
+  if (cars.length > 8) { // Изменено с 4 на 8
+    const label = carsExpanded ? 'Свернуть' : `Показать больше (${cars.length - 8})`;
     const toggleButton = document.createElement('button');
     toggleButton.type = 'button';
     toggleButton.className = 'prof-more';
@@ -200,7 +222,7 @@ function renderSkills(skills) {
     ['uzi', 'UZI', 'Владение UZI'],
   ];
 
-  const visibleSkills = skillsExpanded ? allSkills : allSkills.slice(0, 3);
+  const visibleSkills = skillsExpanded ? allSkills : allSkills.slice(0, 6); // Увеличено с 3 до 6
   list.innerHTML = visibleSkills.map(([key, title, subtitle]) => `
     <div class="prof-skill">
       <div class="prof-skill-info">
@@ -214,8 +236,8 @@ function renderSkills(skills) {
   const parent = list.parentElement;
   parent?.querySelectorAll('.prof-more').forEach((button) => button.remove());
 
-  if (allSkills.length > 3) {
-    const label = skillsExpanded ? 'Свернуть' : 'Показать все';
+  if (allSkills.length > 6) { // Изменено с 3 на 6
+    const label = skillsExpanded ? 'Свернуть' : `Показать больше (${allSkills.length - 6})`;
     const toggleButton = document.createElement('button');
     toggleButton.type = 'button';
     toggleButton.className = 'prof-more';
@@ -252,7 +274,7 @@ async function loadCars(data) {
   if (!data.id) return;
 
   try {
-    const response = await fetch(`/api/account/${data.id}/cars`);
+    const response = await fetch(`api/cars.php?id=${data.id}`);
     const result = await response.json();
 
     if (!response.ok) return;
@@ -269,7 +291,7 @@ async function loadFamily(data) {
   if (!data.id) return;
 
   try {
-    const response = await fetch(`/api/account/${data.id}/family`);
+    const response = await fetch(`api/family.php?id=${data.id}`);
     const result = await response.json();
 
     if (!response.ok) return;
@@ -288,6 +310,77 @@ async function loadFamily(data) {
     setText('characterFamilyCard', normalizeText(data.familyName, 'Не состоит'));
     setText('characterFamilyRank', familyRankLabel(data));
   }
+}
+
+async function loadStats(data) {
+  if (!data.id) return;
+
+  try {
+    const response = await fetch(`api/stats.php?id=${data.id}`);
+    const result = await response.json();
+
+    if (!response.ok) return;
+
+    // Добавляем версию и обновляем данные
+    result._version = '2.0';
+    Object.assign(account, result);
+    localStorage.setItem('hamsterAccount', JSON.stringify(account));
+    renderProfile(account);
+  } catch (_error) {
+    renderBusinesses(data.businesses || []);
+    renderHouses(data.houses || []);
+  }
+}
+
+function renderBusinesses(items) {
+  const list = document.getElementById('profileBusinesses');
+  if (!list) return;
+
+  if (!items.length) {
+    list.innerHTML = '<div class="prof-empty">Бизнеса нет.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map((item) => {
+    const cityName = getCityName(item.city);
+    const bizTypeName = getBusinessTypeName(item.type);
+    
+    return `
+      <article class="prof-car">
+        <div class="prof-car-info">
+          <b>${escapeHtml(item.name)}</b>
+          <span>ID ${item.id} · ${bizTypeName} · ${cityName}</span>
+          <small>Касса ${formatMoney(item.balance)} · товар ${Number(item.products || 0).toLocaleString('ru-RU')}</small>
+          <small>Цена ${formatMoney(item.price)}${item.rentPrice > 0 ? ` · аренда ${formatMoney(item.rentPrice)}` : ''}</small>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function renderHouses(items) {
+  const list = document.getElementById('profileHouses');
+  if (!list) return;
+
+  if (!items.length) {
+    list.innerHTML = '<div class="prof-empty">Дома нет.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map((item) => {
+    const cityName = getCityName(item.city);
+    
+    return `
+      <article class="prof-car">
+        <div class="prof-car-info">
+          <b>${escapeHtml(item.name)}</b>
+          <span>ID ${item.id} · ${houseTypeLabel(item.type)} · ${cityName}</span>
+          <small>${formatMoney(item.price)}${item.rentPrice > 0 ? ` · аренда ${formatMoney(item.rentPrice)}` : ''}</small>
+          ${item.improvements > 0 ? `<small>Улучшения: ${item.improvements}</small>` : ''}
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 async function loadVehicleNames() {
@@ -371,10 +464,53 @@ function normalizeText(value, fallback) {
 }
 
 function formatDate(value) {
-  if (!value) return 'Нет данных';
-  const date = new Date(value);
+  if (value === null || value === undefined || value === '') return 'Нет данных';
+
+  const raw = Number(value);
+  if (!Number.isFinite(raw) || raw <= 0) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return date.toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' });
+  }
+
+  const millis = raw < 1e12 ? raw * 1000 : raw;
+  const date = new Date(millis);
   if (Number.isNaN(date.getTime())) return String(value);
   return date.toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' });
+}
+
+function formatPlaytime(value) {
+  if (value === null || value === undefined || value === '') return '—';
+  
+  const seconds = Math.max(0, Number(value || 0));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours > 0) return `${hours} ч ${minutes} мин`;
+  if (minutes > 0) return `${minutes} мин`;
+  if (seconds > 0) return `${seconds} сек`;
+  return '0 мин';
+}
+
+function houseTypeLabel(value) {
+  const types = {
+    0: 'Эконом',
+    1: 'Эконом+',
+    2: 'Средний',
+    3: 'Комфорт',
+    4: 'Премиум',
+    5: 'Элитный',
+  };
+
+  return types[Number(value)] || `Тип ${value || 0}`;
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function adminLabel(data) {
@@ -406,4 +542,32 @@ function jobLabel(value) {
   };
 
   return jobs[Number(value)] || `Работа #${value || 0}`;
+}
+
+function getCityName(value) {
+  const cities = {
+    0: 'Лос-Сантос',
+    1: 'Сан-Фиерро',
+    2: 'Лас-Вентурас',
+  };
+
+  return cities[Number(value)] || `Город ${value || 0}`;
+}
+
+function getBusinessTypeName(value) {
+  const types = {
+    1: '24/7',
+    2: 'Заправка',
+    3: 'Пиццерия',
+    4: 'Бургерная',
+    5: 'Бар',
+    6: 'Оружейный',
+    7: 'Магазин одежды',
+    8: 'Автосалон',
+    9: 'СТО',
+    10: 'Отель',
+    11: 'Казино',
+  };
+
+  return types[Number(value)] || `Тип ${value || 0}`;
 }
